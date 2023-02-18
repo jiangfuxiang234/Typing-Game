@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+        }
+
+        body {
+            background-image: url(./img/bg.png);
+        }
+
+        .score {
+            width: 400px;
+            height: 200px;
+            line-height: 200px;
+            text-align: center;
+            color: #fff;
+            font-size: 46px;
+            position: absolute;
+            left: 0;
+            top: 0;
+        }
+
+        .score::before {
+            content: '得分：';
+        }
+
+        .time {
+            width: 100px;
+            height: 100px;
+            text-align: center;
+            line-height: 100px;
+            position: absolute;
+            top: 0;
+            right: 0;
+        }
+
+        .time::before {
+            content: '用时：';
+        }
+    </style>
+</head>
+
+<body>
+    <div class="score" id="score">0</div>
+    <div class="time" id="time">0</div>
+    <script>
+        function random(x, y) {
+            return Math.random() * (y - x) + x;
+        }
+        var time = document.getElementById('time')
+        var t = 0;
+        var times = setInterval(function () {
+
+            t++;
+            time.innerText = t;
+
+        }, 1000)
+        function createrimg() {
+            var img = document.createElement('img');
+            img.style.width = '50px';
+            var letter = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+            var v = letter[parseInt(random(0, 26))];
+            img.src = './img/' + v + '.png';
+            img.title = v;
+            img.style.position = 'absolute';
+            img.style.top = innerHeight - 100 + 'px';
+            img.style.left = random(0, innerWidth - 50) + 'px';
+            document.body.appendChild(img);
+        }
+        cretedspeed = 500;
+        var imgz = setInterval(function () {
+
+            createrimg();
+        }, cretedspeed)
+        var upspeed = 15;
+        var uprun = setInterval(function () {
+
+            var imgs = document.getElementsByTagName('img');
+            for (var i = 0; i < imgs.length; i++) {
+                var top = parseInt(imgs[i].style.top);
+                top--;
+                imgs[i].style.top = top + 'px';
+                if (top <= 0) {
+                    clearInterval(imgz);
+                    clearInterval(uprun);
+                    clearInterval(times);
+                    document.body.onclick = null;
+                    alert('您的最终分数为：' + score);
+                }
+            }
+        }, upspeed)
+        var score = 0;
+        var scores = document.getElementById('score');
+        document.body.onclick = function (e) {
+            if (e.target.tagName == 'IMG') {
+                document.body.removeChild(e.target);
+                score++;
+                scores.innerText = score;
+                level(score);
+
+            }
+
+        }
+        document.body.onkeydown = function(e){
+            var key = e.key.toUpperCase();
+          var imgd = document.getElementsByTagName('img');
+
+            for(var i = 0; i < imgd.length; i++){
+                var imgt = imgd[i]
+            if(key == imgt.title){
+                document.body.removeChild(imgt);
+                score++;
+                level();
+                score.innerText = score;
+                break;
+            }
+        }
+        }
+        function level() {
+            if (score > 5 && score < 10) {
+                upspeed = 10;
+                cretedspeed = 400;
+            } else if (score >= 10 && score < 15) {
+                upspeed = 8;
+                cretedspeed = 300;
+            } else if (score >= 15 && score < 20) {
+                upspeed = 5;
+                cretedspeed = 200;
+            }
+            clearInterval(uprun);
+            clearInterval(imgz);
+            uprun = setInterval(function () {
+
+                var imgs = document.getElementsByTagName('img');
+                for (var i = 0; i < imgs.length; i++) {
+                    var top = parseInt(imgs[i].style.top);
+                    top--;
+                    imgs[i].style.top = top + 'px';
+                    if (top <= 0) {
+                        clearInterval(imgz);
+                        clearInterval(uprun);
+                        clearInterval(times);
+                        document.body.onclick = null;
+                        alert('您的最终分数为：' + score);
+                    }
+                }
+            }, upspeed)
+            imgz = setInterval(function () {
+                createrimg()
+            }, cretedspeed)
+
+        }
+    </script>
+</body>
+
+</html>
